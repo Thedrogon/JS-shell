@@ -1,0 +1,17 @@
+{
+  "name": "js-shell",
+  "version": "1.0.0",
+  "description": "A shell written in javascript.",
+  "keywords": [
+    "shell",
+    "js",
+    "javascript"
+  ],
+  "license": "MIT",
+  "author": "Sayanjit Mukherjee",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "run ./js_shell.sh"
+  }
+}
