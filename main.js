@@ -12,6 +12,14 @@ function main() {
 	rl.prompt()
 
 	rl.on('line', (line) => {
+
+		if (line === "exit 0"){
+			process.exit(0)
+		}
+
+		if (line === 'exit 1'){
+			process.exit(1)
+		}
 		console.log(`${line}: command not found`)
 		rl.prompt()
 	})
