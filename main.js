@@ -1,4 +1,6 @@
 import readline from "readline";
+import fs from 'fs'
+import path from "path";
 
 const builtin = ['echo', 'type', 'exit']
 
@@ -7,7 +9,45 @@ const type = (code) => {
 	if (builtin.includes(code)) {
 		console.log(`${code} is a shell builtin`)
 	} else {
+		const PATH = process.env.PATH || ""
+		const sep = process.platform === 'win32' ? ';' : ':'
+		const path_dir = PATH.split(sep).filter(Boolean);
+
+		const winExts = process.platform === "win32"
+			? (process.env.PATHEXT || ".EXE;.CMD;.BAT;.COM")
+				.toLowerCase()
+				.split(";")
+			: [];
+
+
+		for (const dir of path_dir) {
+			const basePath = path.join(dir, code);
+
+
+			//not windows
+			if (process.platform !== "win32") {
+				if (fs.existsSync(basePath)) {
+					const st = fs.statSync(basePath);
+					const canExec = (st.mode & 0o111) !== 0 && st.isFile();
+					if (canExec) {
+						console.log(`${code} is ${basePath}`);
+						return;
+					}
+				}
+			}
+
+			if (process.platform === "win32") {
+				for (const ext of winExts) {
+					const file = basePath + ext;
+					if (fs.existsSync(file) && fs.statSync(file).isFile()) {
+						console.log(`${code} is ${file}`);
+						return;
+					}
+				}
+			}
+		}
 		console.log(`${code}: not found`)
+
 	}
 }
 
